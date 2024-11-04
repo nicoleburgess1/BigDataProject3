@@ -36,3 +36,6 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/ACTIVATED.csv
+/PEOPLE.csv
+/PEOPLE_WITH_HANDSHAKE_INFO.csv
