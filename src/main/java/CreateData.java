@@ -123,9 +123,62 @@ public class CreateData {
 
     }
 
+    public static void customers() {
+        Random rand = new Random(7);
+        ArrayList<String> namesList = convertCSVtoArrayList("names.csv");
+
+        File data = new File("Customers.csv");
+        try (PrintWriter writer = new PrintWriter(new FileWriter(data))) {
+            int namesIndex = 0;
+            for (int i = 1; i <= 50000; i++) {
+                int id = i;
+                String name = namesList.get(namesIndex);
+                int age = rand.nextInt(83) + 18;
+                int countryCode = rand.nextInt(500) + 1;
+                int salary = rand.nextInt(9999900) + 100;
+                if (namesIndex == namesList.size() - 1)
+                    namesIndex = 0;
+                else
+                    namesIndex++;
+                writer.println(id + "," + name + "," + countryCode + "," + salary);
+            }
+            System.out.println("CSV file written successfully.");
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing the CSV file.");
+
+        }
+    }
+
+    public static void purchases() {
+        Random rand = new Random(7);
+        ArrayList<String> descList = convertCSVtoArrayList("Descriptions.csv");
+
+        File data = new File("Purchases.csv");
+        try (PrintWriter writer = new PrintWriter(new FileWriter(data))) {
+            int descIndex = 0;
+            for (int i = 1; i <= 5000000; i++) {
+                int transID = i;
+                int custID = rand.nextInt(50000) + 1;
+                int transTotal = rand.nextInt(1981) + 20;
+                int transNumItems = rand.nextInt(15) + 1;
+                String transDesc = descList.get(descIndex);
+                writer.println(transID + "," + custID + "," + transTotal + "," + transNumItems + "," + transDesc);
+                if (descIndex == descList.size() - 1)
+                    descIndex = 0;
+                else
+                    descIndex++;
+            }
+            System.out.println("CSV file written successfully.");
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing the CSV file.");
+
+        }
+    }
     public static void main(String[]args){
-        people();
-        activated();
-        handshakeInfo();
+        //people();
+        //activated();
+        //handshakeInfo();
+        customers();
+        purchases();
     }
 }
