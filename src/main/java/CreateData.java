@@ -9,10 +9,10 @@ public class CreateData {
         Random rand = new Random(7);
         ArrayList<String> namesList = convertCSVtoArrayList("names.csv");
 
-        File data = new File("PEOPLE.csv");
+        File data = new File("TESTPEOPLE.csv");
         try (PrintWriter writer = new PrintWriter(new FileWriter(data))) {
             int namesIndex = 0;
-            for(int i=1; i<=1000000; i++){
+            for(int i=1; i<=500; i++){
                 int id = i;
                 int x = rand.nextInt(10000);
                 int y = rand.nextInt(10000);
@@ -70,20 +70,20 @@ public class CreateData {
 
     public static void activated(){
         Random rand = new Random(7);
-        ArrayList<String[]> peopleList = convertCSVtoArrayArrayList("PEOPLE.csv");
-        File data = new File("ACTIVATED.csv");
+        ArrayList<String[]> peopleList = convertCSVtoArrayArrayList("TESTPEOPLE.csv");
+        File data = new File("TESTACTIVATED.csv");
         ArrayList<Integer> ids = new ArrayList<>();
         try (PrintWriter writer = new PrintWriter(new FileWriter(data))) {
 
-            for(int i=1; i<=300000; i++){
-                int randId = rand.nextInt(1000000)+1;
+            for(int i=1; i<=100; i++){
+                int randId = rand.nextInt(500)+1;
                 while(true){
                     if(!ids.contains(randId)){
                         ids.add(randId);
                         break;
                     }
                     else
-                        randId = rand.nextInt(1000000)+1;
+                        randId = rand.nextInt(500)+1;
                 }
                 writer.println(peopleList.get(randId-1)[0] + "," + peopleList.get(randId-1)[1] + "," + peopleList.get(randId-1)[2] + "," + peopleList.get(randId-1)[3] + "," + peopleList.get(randId-1)[4] + "," + peopleList.get(randId-1)[5]);
             }
@@ -95,12 +95,12 @@ public class CreateData {
 
     public static void handshakeInfo() {
         ArrayList<Boolean> hasInfo = new ArrayList<>();
-        for(int i = 0; i<=1000000; i++){
+        for(int i = 0; i<=500; i++){
             hasInfo.add(false);
         }
-        ArrayList<String[]> peopleList = convertCSVtoArrayArrayList("PEOPLE.csv");
-        ArrayList<String[]> activatedList = convertCSVtoArrayArrayList("ACTIVATED.csv");
-        File data = new File("PEOPLE_WITH_HANDSHAKE_INFO.csv");
+        ArrayList<String[]> peopleList = convertCSVtoArrayArrayList("TESTPEOPLE.csv");
+        ArrayList<String[]> activatedList = convertCSVtoArrayArrayList("TESTACTIVATED.csv");
+        File data = new File("TESTPEOPLE_WITH_HANDSHAKE_INFO.csv");
 
         for(int i=0; i<activatedList.size(); i++){
             hasInfo.set(Integer.parseInt(activatedList.get(i)[0]), true);

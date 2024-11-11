@@ -39,3 +39,8 @@ build/
 /ACTIVATED.csv
 /PEOPLE.csv
 /PEOPLE_WITH_HANDSHAKE_INFO.csv
+/TESTACTIVATED.csv
+/TESTPEOPLE.csv
+/TESTPEOPLE_WITH_HANDSHAKE_INFO.csv
+/Customers.csv
+/Purchases.csv
