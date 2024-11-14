@@ -14,8 +14,8 @@ public class CreateData {
             int namesIndex = 0;
             for(int i=1; i<=500; i++){
                 int id = i;
-                int x = rand.nextInt(10000);
-                int y = rand.nextInt(10000);
+                int x = rand.nextInt(250);
+                int y = rand.nextInt(250);
                 String name = namesList.get(namesIndex);;
                 int age = rand.nextInt(100);
                 String email = name + id + "@gmail.com";
@@ -75,7 +75,7 @@ public class CreateData {
         ArrayList<Integer> ids = new ArrayList<>();
         try (PrintWriter writer = new PrintWriter(new FileWriter(data))) {
 
-            for(int i=1; i<=100; i++){
+            for(int i=1; i<=50; i++){
                 int randId = rand.nextInt(500)+1;
                 while(true){
                     if(!ids.contains(randId)){
@@ -175,10 +175,10 @@ public class CreateData {
         }
     }
     public static void main(String[]args){
-        //people();
-        //activated();
-        //handshakeInfo();
-        customers();
-        purchases();
+        people();
+        activated();
+        handshakeInfo();
+        //customers();
+        //purchases();
     }
 }

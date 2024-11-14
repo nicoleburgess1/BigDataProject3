@@ -25,9 +25,9 @@ object Query1 {
     }
 
     //for each activated if distance to people is <=6 add people id to list with activated id if not already activated
-    val crossList = activatedList.cartesian(peopleList).filter { case ((id1, x1, y1, _, _, _), (id2, x2, y2, _, _, _)) => euclideanDistance(x1, y1, x2, y2) <= 100 }
+    val crossList = activatedList.cartesian(peopleList).filter { case ((id1, x1, y1, _, _, _), (id2, x2, y2, _, _, _)) => euclideanDistance(x1, y1, x2, y2) <= 25 }
       .map { case ((id1, _, _, _, _, _), (id2, _, _, _, _, _)) => (id1, id2) }
-      .distinct()
+      //.distinct()
       .groupByKey()
       .mapValues(_.toList)
     crossList.collect().foreach { case (id1, peopleIds) => println(s"Activated ID $id1 has nearby People IDs: ${peopleIds.mkString(", ")}")}
