@@ -10,5 +10,13 @@ points)
 
 
 object Task4 {
+  def main(args: Array[String]): Unit = {
+    val spark = SparkSession.builder()
+      .appName("T4")
+      .config("spark.master", "local")
+      .getOrCreate()
+    val df = spark.read.csv("Purchases.csv")
+    df.show()
 
+  }
 }
