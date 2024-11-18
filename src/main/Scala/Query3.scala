@@ -19,7 +19,7 @@ object Query3 {
 
     val sc = new SparkContext(sparConf)
 
-    val lines: RDD[String] = sc.textFile("PEOPLE_WITH_HANDSHAKE_INFO.csv")
+    val lines: RDD[String] = sc.textFile("TESTPEOPLE_WITH_HANDSHAKE_INFO.csv")
     val data: RDD[(Int, Int, Int, String, Int, String, String)] = lines.map {
       line =>
         val Array(id, x, y, name, age, email, activated) = line.split(",")
@@ -70,7 +70,14 @@ object Query3 {
 
     val activeListFiltered = activeFilter(activeList)
 
-    activeListFiltered.foreach(println)
+
+    val PeopleGroupToCount = activeListFiltered.map {
+      case (id, x, y, name, age, email, activated, neighbors) => {
+        (id, x, y, name, age, email, activated, neighbors.size)
+      }
+    }
+
+    PeopleGroupToCount.foreach(println)
 
     sc.stop()
   }
