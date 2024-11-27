@@ -140,7 +140,7 @@ public class CreateData {
                     namesIndex = 0;
                 else
                     namesIndex++;
-                writer.println(id + "," + name + "," + countryCode + "," + salary);
+                writer.println(id + "," + name + "," + age + "," + countryCode + "," + salary);
             }
             System.out.println("CSV file written successfully.");
         } catch (IOException e) {
@@ -175,10 +175,10 @@ public class CreateData {
         }
     }
     public static void main(String[]args){
-        people();
-        activated();
-        handshakeInfo();
-        //customers();
+        //people();
+        //activated();
+        //handshakeInfo();
+        customers();
         //purchases();
     }
 }

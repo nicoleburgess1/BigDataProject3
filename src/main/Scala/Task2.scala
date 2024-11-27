@@ -17,10 +17,10 @@ object Task2 {
       .config("spark.master", "local")
       .getOrCreate()
     spark.catalog.clearCache()
-    val df = spark.read.schema("_c0 INTEGER, _c1 INTEGER, _c2 INTEGER,_c3 INTEGER, _c4 STRING").csv("T1_test.csv")
+    val df = spark.read.schema("_c0 INTEGER, _c1 INTEGER, _c2 INTEGER,_c3 INTEGER, _c4 STRING").csv("T1.csv")
     //df.show()
     df.createOrReplaceTempView("table")
-    val sqlDF = spark.sql("SELECT _c3, min(_c2), max(_c2) from table group by _c3")
+    val sqlDF = spark.sql("SELECT _c3, min(_c2) as min, max(_c2) as max, percentile_approx(_c2, 0.5) as median from table group by _c3")
     sqlDF.show()
     val tempDir = "T2Result_temp"
 
@@ -35,7 +35,7 @@ object Task2 {
     val tempFile = new File(tempDir).listFiles().filter(_.getName.startsWith("part-")).head
 
     // Define the target file path
-    val targetPath = Paths.get("T1.csv")
+    val targetPath = Paths.get("T2.csv")
 
     // Move and rename the file
     Files.move(tempFile.toPath, targetPath, StandardCopyOption.REPLACE_EXISTING)
