@@ -1,6 +1,8 @@
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.rdd.RDD
 
+import scala.collection.mutable
+
 /*
 Given the same setup in Query 1, however, return the unique identifiers pi.id of
 all individuals in PEOPLE who were within 6 units of any person in ACTIVATED,
@@ -20,24 +22,57 @@ object Query2 {
     val people: RDD[String] = sc.textFile("TESTPEOPLE.csv")
     val activated: RDD[String] = sc.textFile("TESTACTIVATED.csv")
 
-    val peopleList: RDD[(Int, Int, Int, String, Int, String)] = people.map { line =>
+    val peopleList: RDD[(Int, Double, Double)] = people.map { line =>
       val Array(id, x, y, name, age, email) = line.split(",")
-      (id.toInt, x.toInt, y.toInt, name, age.toInt, email)
+      (id.toInt, x.toDouble, y.toDouble)
     }
 
-    val activatedList: RDD[(Int, Int, Int, String, Int, String)] = activated.map { line =>
+    val activatedList: RDD[(Int, Double, Double)] = activated.map { line =>
       val Array(id, x, y, name, age, email) = line.split(",")
-      (id.toInt, x.toInt, y.toInt, name, age.toInt, email)
+      (id.toInt, x.toDouble, y.toDouble)
     }
 
-    //for each activated if distance to people is <=6 add people id to list with activated id if not already activated
-    val crossList = activatedList.cartesian(peopleList).filter { case ((id1, x1, y1, _, _, _), (id2, x2, y2, _, _, _)) => euclideanDistance(x1, y1, x2, y2) <= 6 }
-      .map { case ((id1, _, _, _, _, _), (id2, _, _, _, _, _)) => (id1, id2) }
-      .distinct()
-      .groupByKey()
-      .mapValues(_.toList)
+    // Broadcast the activated IDs for efficient lookup
+    val activatedSet = sc.broadcast(activatedList.collect().toSet)
+
+    // Create a new RDD with a flag for activation status
+    val flaggedPeopleList: RDD[(Int, Double, Double, Boolean)] = peopleList.map { case (id, x, y) =>
+      val isActivated = activatedSet.value.contains(id, x, y) // Use the broadcasted value
+      (id, x, y, isActivated)
+    }
+
+    flaggedPeopleList.collect().foreach {
+      case (id, x, y, isActivated) =>
+        println(s"ID: $id, Activated: $isActivated")
+    }
+
+    /*val peopleAtRange: RDD[Int] = flaggedPeopleList.flatMap(
+      bin => {
+        val peopleIterator: Iterable[(Double, Double, Boolean, Int)] = bin._2
+        val inactivatedPeopleSet: mutable.Set[Int] = new mutable.HashSet()
+        val activatedPeople: Iterable[(Double, Double, Boolean, Int)] = peopleIterator.filter(value => value._3)
+        val inactivatedPeople: Iterable[(Double, Double, Boolean, Int)] = peopleIterator.filter(value => !value._3)
+
+        for (activatedIndividual <- activatedPeople) {
+          for (inactivatedPerson <- inactivatedPeople) {
+            if (!inactivatedPeopleSet.contains(inactivatedPerson._4) && euclideanDistance(activatedIndividual._1, activatedIndividual._2, inactivatedPerson._1, inactivatedPerson._2) < 6) {
+              inactivatedPeopleSet.add(inactivatedPerson._4)
+            }
+          }
+        }
+        inactivatedPeopleSet
+      }
+    )
+
+    val uniquePeopleIds = peopleAtRange.distinct()
+
+    // Collect and print results
+    val result = uniquePeopleIds.collect()
+    println(s"Unique People IDs within 6 units: ${result.mkString(", ")}")
     //make empty peopleId list and check if each people id has been used, if yes, don't add again, if no, use it and add to list
-    crossList.collect().foreach { case (id1, peopleIds) => println(s"Activated ID $id1 has nearby People IDs: ${peopleIds.mkString(", ")}") }
+    //crossList.collect().foreach { case (id1, peopleIds) => println(s"Activated ID $id1 has nearby People IDs: ${peopleIds.mkString(", ")}") }
+    */
     sc.stop()
+
   }
 }
