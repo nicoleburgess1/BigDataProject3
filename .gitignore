@@ -47,3 +47,5 @@ build/
 /T1Result.csv/
 /T1.csv
 /T4.csv
+/filtered_train.csv
+/filtered_test.csv
