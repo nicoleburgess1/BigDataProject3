@@ -24,6 +24,11 @@ object Task7_1_2 {
       .setNumClasses(10)
       .run(training)
 
+    println("Feature Weights:")
+    model.weights.toArray.zipWithIndex.foreach { case (weight, index) =>
+      println(s"Feature $index: $weight")
+    }
+
     // Compute raw scores on the test set.
     val predictionAndLabels = test.map { case LabeledPoint(label, features) =>
       val prediction = model.predict(features)
