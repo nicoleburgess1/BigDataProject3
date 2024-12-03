@@ -1,6 +1,6 @@
 import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.classification.{DecisionTreeClassifier, LogisticRegression, NaiveBayes}
-import org.apache.spark.ml.evaluation.{BinaryClassificationEvaluator, RegressionEvaluator}
+import org.apache.spark.ml.evaluation.{BinaryClassificationEvaluator, MulticlassClassificationEvaluator, RegressionEvaluator}
 import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.ml.feature.{OneHotEncoder, StringIndexer}
@@ -73,6 +73,7 @@ object Task7_2_1 {
     f1Scores.collect().foreach { case (threshold, f1Score) =>
       println(s"Threshold: $threshold, F1 Score: $f1Score")
     }
+
     preparedData.select("CustomerID", "ProductPrice", "Quantity", "TotalPurchaseAmount", "CustomerAge", "Age", "Churn", "ProductCategoryEncoded", "GenderEncoded", "PaymentMethodEncoded", "features").show()
   }
 }

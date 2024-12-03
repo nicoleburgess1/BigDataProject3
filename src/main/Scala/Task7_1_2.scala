@@ -51,10 +51,11 @@ object Task7_1_2 {
     val predictions = model.transform(testData)
 
     //Evaluate model
-    val scoreAndLabels: RDD[(Double, Double)] = predictions.select("probability", "Churn")
-      .rdd
-      .map(row => (row.getAs[org.apache.spark.ml.linalg.Vector]("probability")(1), row.getAs[Double]("Churn")))
-
+    val scoreAndLabels = predictions.rdd.map { point =>
+      val score = model.predict(point.getAs[org.apache.spark.ml.linalg.Vector]("features")) // Use getAs to retrieve features
+      val label = point.getAs[Double]("label") // Get the true label from the "label" column (assuming it's a double)
+      (score, label)
+    }
 
     // Get evaluation metrics.
     val metrics = new BinaryClassificationMetrics(scoreAndLabels)
@@ -69,6 +70,16 @@ object Task7_1_2 {
     f1Scores.collect().foreach { case (threshold, f1Score) =>
       println(s"Threshold: $threshold, F1 Score: $f1Score")
     }
+    val trainingSummary = model.summary
+    val accuracy = trainingSummary.accuracy
+    val falsePositiveRate = trainingSummary.weightedFalsePositiveRate
+    val truePositiveRate = trainingSummary.weightedTruePositiveRate
+    val fMeasure = trainingSummary.weightedFMeasure
+    val precision = trainingSummary.weightedPrecision
+    val recall = trainingSummary.weightedRecall
+    println(s"Accuracy: $accuracy\nFPR: $falsePositiveRate\nTPR: $truePositiveRate\n" +
+      s"F-measure: $fMeasure\nPrecision: $precision\nRecall: $recall")
+
     preparedData.select("CustomerID", "ProductPrice", "Quantity", "TotalPurchaseAmount", "CustomerAge", "Age", "Churn", "features").show()
   }
 }

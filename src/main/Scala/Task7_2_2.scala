@@ -73,6 +73,16 @@ object Task7_2_2 {
     f1Scores.collect().foreach { case (threshold, f1Score) =>
       println(s"Threshold: $threshold, F1 Score: $f1Score")
     }
+
+    val trainingSummary = model.summary
+    val accuracy = trainingSummary.accuracy
+    val falsePositiveRate = trainingSummary.weightedFalsePositiveRate
+    val truePositiveRate = trainingSummary.weightedTruePositiveRate
+    val fMeasure = trainingSummary.weightedFMeasure
+    val precision = trainingSummary.weightedPrecision
+    val recall = trainingSummary.weightedRecall
+    println(s"Accuracy: $accuracy\nFPR: $falsePositiveRate\nTPR: $truePositiveRate\n" +
+      s"F-measure: $fMeasure\nPrecision: $precision\nRecall: $recall")
     preparedData.select("CustomerID", "ProductPrice", "Quantity", "TotalPurchaseAmount", "CustomerAge", "Age", "Churn", "ProductCategoryEncoded", "GenderEncoded", "PaymentMethodEncoded", "features").show()
   }
 }

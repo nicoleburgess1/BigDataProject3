@@ -67,6 +67,15 @@ object Task7_1_3 {
     val auPRC = metrics.areaUnderPR()
     println(s"Area under precision-recall curve = $auPRC")
 
+    val trainingSummary = model.summary
+    val accuracy = trainingSummary.accuracy
+    val falsePositiveRate = trainingSummary.weightedFalsePositiveRate
+    val truePositiveRate = trainingSummary.weightedTruePositiveRate
+    val fMeasure = trainingSummary.weightedFMeasure
+    val precision = trainingSummary.weightedPrecision
+    val recall = trainingSummary.weightedRecall
+    println(s"Accuracy: $accuracy\nFPR: $falsePositiveRate\nTPR: $truePositiveRate\n" +
+      s"F-measure: $fMeasure\nPrecision: $precision\nRecall: $recall")
     preparedData.select("CustomerID", "ProductPrice", "Quantity", "TotalPurchaseAmount", "CustomerAge", "Age", "Churn", "features").show()
   }
 }
