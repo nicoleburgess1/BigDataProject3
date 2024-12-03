@@ -17,7 +17,7 @@ object Task2 {
       .config("spark.master", "local")
       .getOrCreate()
     spark.catalog.clearCache()
-    val df = spark.read.schema("_c0 INTEGER, _c1 INTEGER, _c2 INTEGER,_c3 INTEGER, _c4 STRING").csv("T1.csv")
+    val df = spark.read.schema("_c0 INTEGER, _c1 INTEGER, _c2 INTEGER,_c3 INTEGER, _c4 STRING").csv("TaskOutputs/T1.csv")
     //df.show()
     df.createOrReplaceTempView("table")
     val sqlDF = spark.sql("SELECT _c3, min(_c2) as min, max(_c2) as max, percentile_approx(_c2, 0.5) as median from table group by _c3")

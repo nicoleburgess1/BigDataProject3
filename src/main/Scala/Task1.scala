@@ -16,14 +16,14 @@ object Task1 {
       .config("spark.master", "local")
       .getOrCreate()
     spark.catalog.clearCache()
-    val df = spark.read.csv("Purchases.csv")
+    val df = spark.read.csv("Part2/Purchases.csv")
     df.show()
 
     // Register DataFrame as a SQL temporary view
     df.createOrReplaceTempView("purchases")
 
     // SQL query
-    val sqlDF = spark.sql("SELECT * FROM purchases WHERE _c1 > 600")
+    val sqlDF = spark.sql("SELECT * FROM purchases WHERE _c1 < 600")
     sqlDF.show()
     // Define the temporary output directory
     val tempDir = "T1Result_temp"
