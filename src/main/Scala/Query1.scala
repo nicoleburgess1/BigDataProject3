@@ -11,8 +11,8 @@ object Query1 {
   def main(args: Array[String]): Unit = {
     val sparConf = new SparkConf().setMaster("local").setAppName("Query1")
     val sc = new SparkContext(sparConf)
-    val people: RDD[String] = sc.textFile("TESTPEOPLE.csv")
-    val activated: RDD[String] = sc.textFile("TESTACTIVATED.csv")
+    val people: RDD[String] = sc.textFile("Part1/TESTPEOPLE.csv")
+    val activated: RDD[String] = sc.textFile("Part1/TESTACTIVATED.csv")
 
     val peopleList: RDD[(Int, Int, Int, String, Int, String)] = people.map { line =>
       val Array(id, x, y, name, age, email) = line.split(",")

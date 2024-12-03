@@ -1,4 +1,5 @@
 import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.rdd.RDD
 
 import scala.collection.mutable
@@ -17,62 +18,45 @@ object Query2 {
   }
 
   def main(args: Array[String]): Unit = {
-    val sparConf = new SparkConf().setMaster("local").setAppName("Query1")
-    val sc = new SparkContext(sparConf)
-    val people: RDD[String] = sc.textFile("TESTPEOPLE.csv")
-    val activated: RDD[String] = sc.textFile("TESTACTIVATED.csv")
 
-    val peopleList: RDD[(Int, Double, Double)] = people.map { line =>
-      val Array(id, x, y, name, age, email) = line.split(",")
-      (id.toInt, x.toDouble, y.toDouble)
-    }
-
-    val activatedList: RDD[(Int, Double, Double)] = activated.map { line =>
-      val Array(id, x, y, name, age, email) = line.split(",")
-      (id.toInt, x.toDouble, y.toDouble)
-    }
-
-    // Broadcast the activated IDs for efficient lookup
-    val activatedSet = sc.broadcast(activatedList.collect().toSet)
-
-    // Create a new RDD with a flag for activation status
-    val flaggedPeopleList: RDD[(Int, Double, Double, Boolean)] = peopleList.map { case (id, x, y) =>
-      val isActivated = activatedSet.value.contains(id, x, y) // Use the broadcasted value
-      (id, x, y, isActivated)
-    }
-
-    flaggedPeopleList.collect().foreach {
-      case (id, x, y, isActivated) =>
-        println(s"ID: $id, Activated: $isActivated")
-    }
-
-    /*val peopleAtRange: RDD[Int] = flaggedPeopleList.flatMap(
-      bin => {
-        val peopleIterator: Iterable[(Double, Double, Boolean, Int)] = bin._2
-        val inactivatedPeopleSet: mutable.Set[Int] = new mutable.HashSet()
-        val activatedPeople: Iterable[(Double, Double, Boolean, Int)] = peopleIterator.filter(value => value._3)
-        val inactivatedPeople: Iterable[(Double, Double, Boolean, Int)] = peopleIterator.filter(value => !value._3)
-
-        for (activatedIndividual <- activatedPeople) {
-          for (inactivatedPerson <- inactivatedPeople) {
-            if (!inactivatedPeopleSet.contains(inactivatedPerson._4) && euclideanDistance(activatedIndividual._1, activatedIndividual._2, inactivatedPerson._1, inactivatedPerson._2) < 6) {
-              inactivatedPeopleSet.add(inactivatedPerson._4)
-            }
-          }
-        }
-        inactivatedPeopleSet
+    val conf = new SparkConf().setAppName("Task1Query2").setMaster("local")
+    val sc = new SparkContext(conf)
+    val peopleDF = sc.textFile("Part1/TESTPEOPLE.csv")
+    val activatedDF = sc.textFile("Part1/TESTACTIVATED.csv")
+    val peopleData = peopleDF.map(line => {
+      val fields = line.split(",")
+      val id = fields(0).toInt
+      val x = fields(1).toInt
+      val y = fields(2).toInt
+      val name = fields(3)
+      val age = fields(4).toInt
+      val email = fields(5)
+      (id, x, y, name, age, email)
+    })
+    val activatedData = activatedDF.map(line => {
+      val fields = line.split(",")
+      val id = fields(0).toInt
+      val x = fields(1).toInt
+      val y = fields(2).toInt
+      val name = fields(3)
+      val age = fields(4).toInt
+      val email = fields(5)
+      (id, x, y, name, age, email)
+    })
+    val activationRange = 6.0
+    val result = peopleData.cartesian(activatedData)
+      .filter { case (person, activatedPerson) =>
+        Math.sqrt(Math.pow(person._2 - activatedPerson._2, 2) + Math.pow(person._3 - activatedPerson._3, 2)) <= activationRange
       }
-    )
+      .map { case (person, _) => person._1 }.distinct().collect()
+    val fs = FileSystem.get(sc.hadoopConfiguration)
+    val outputPath = "Task1Query2"
+    val outputDir = new Path(outputPath)
+    if (fs.exists(outputDir)) {
+      fs.delete(outputDir, true)
+    }
+    sc.parallelize(result).repartition(1).saveAsTextFile(outputPath)
 
-    val uniquePeopleIds = peopleAtRange.distinct()
-
-    // Collect and print results
-    val result = uniquePeopleIds.collect()
-    println(s"Unique People IDs within 6 units: ${result.mkString(", ")}")
-    //make empty peopleId list and check if each people id has been used, if yes, don't add again, if no, use it and add to list
-    //crossList.collect().foreach { case (id1, peopleIds) => println(s"Activated ID $id1 has nearby People IDs: ${peopleIds.mkString(", ")}") }
-    */
     sc.stop()
-
   }
 }

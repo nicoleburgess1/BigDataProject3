@@ -36,18 +36,20 @@ build/
 
 ### Mac OS ###
 .DS_Store
-/ACTIVATED.csv
-/PEOPLE.csv
-/PEOPLE_WITH_HANDSHAKE_INFO.csv
-/TESTACTIVATED.csv
-/TESTPEOPLE.csv
-/TESTPEOPLE_WITH_HANDSHAKE_INFO.csv
-/Customers.csv
-/Purchases.csv
+/Part1/ACTIVATED.csv
+/Part1/PEOPLE.csv
+/Part1/PEOPLE_WITH_HANDSHAKE_INFO.csv
+/Part1/TESTACTIVATED.csv
+/Part1/TESTPEOPLE.csv
+/Part1/TESTPEOPLE_WITH_HANDSHAKE_INFO.csv
+/Part2/Customers.csv
+/Part2/Purchases.csv
 /T1Result.csv/
-/T1.csv
-/T4.csv
+/TaskOutputs/T1.csv
+/TaskOutputs/T4.csv
 /filtered_train.csv
 /filtered_test.csv
 /trainLibSVM.csv
 /testLibSVM.csv
+/Part1/
+/Part2/

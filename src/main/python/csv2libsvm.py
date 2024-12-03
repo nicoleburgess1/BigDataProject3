@@ -14,16 +14,13 @@ from collections import defaultdict
 
 def construct_line(label, line, labels_dict):
     new_line = []
-    if label.isnumeric():
-        if float(label) == 0.0:
-            label = "0"
+    label = int(label)
+    if label in labels_dict:
+        new_line.append(labels_dict.get(label))
     else:
-        if label in labels_dict:
-            new_line.append(labels_dict.get(label))
-        else:
-            label_id = str(len(labels_dict))
-            labels_dict[label] = label_id
-            new_line.append(label_id)
+        label_id = str(len(labels_dict))
+        labels_dict[label] = label_id
+        new_line.append(label_id)
 
     for i, item in enumerate(line):
         if item == '' or float(item) == 0.0:
@@ -38,9 +35,9 @@ def construct_line(label, line, labels_dict):
 
 # ---
 
-input_file = "../../../../../../testProj3/filtered_train.csv"
+input_file = "filtered_train.csv"
 try:
-    output_file = "testLibSVM.csv"
+    output_file = "trainLibSVM.csv"
 except IndexError:
     output_file = input_file+".out"
 
