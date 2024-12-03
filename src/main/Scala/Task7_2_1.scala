@@ -1,24 +1,20 @@
 import org.apache.spark.ml.Pipeline
-import org.apache.spark.ml.classification.{DecisionTreeClassifier, LogisticRegression, NaiveBayes}
-import org.apache.spark.ml.evaluation.{BinaryClassificationEvaluator, MulticlassClassificationEvaluator, RegressionEvaluator}
+import org.apache.spark.ml.classification.DecisionTreeClassifier
 import org.apache.spark.ml.feature.VectorAssembler
-import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.ml.feature.{OneHotEncoder, StringIndexer}
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.col
-import org.apache.spark.sql.catalyst.trees
 
 object Task7_2_1 {
 
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder()
-      .appName("T6")
+      .appName("T7.2.1")
       .config("spark.master", "local")
       .getOrCreate()
 
-    spark.catalog.clearCache()
 
     val initialdf = spark.read.csv("train.csv")
       .toDF("CustomerID", "PurchaseDate", "ProductCategory", "ProductPrice", "Quantity", "TotalPurchaseAmount", "PaymentMethod", "CustomerAge", "Returns"," CustomerName", "Age", "Gender", "Churn")
@@ -49,7 +45,6 @@ object Task7_2_1 {
     //Split into training and test sets
     val Array(trainingData, testData) = preparedData.randomSplit(Array(0.8, 0.2))
 
-   // Train a Linear Regression model (for example: regression algorithm)
    val dt = new DecisionTreeClassifier()
      .setLabelCol("Churn")
      .setFeaturesCol("features")
@@ -73,7 +68,6 @@ object Task7_2_1 {
     f1Scores.collect().foreach { case (threshold, f1Score) =>
       println(s"Threshold: $threshold, F1 Score: $f1Score")
     }
-
     preparedData.select("CustomerID", "ProductPrice", "Quantity", "TotalPurchaseAmount", "CustomerAge", "Age", "Churn", "ProductCategoryEncoded", "GenderEncoded", "PaymentMethodEncoded", "features").show()
   }
 }

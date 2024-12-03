@@ -1,8 +1,5 @@
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.hadoop.fs.{FileSystem, Path}
-import org.apache.spark.rdd.RDD
-
-import scala.collection.mutable
 
 /*
 Given the same setup in Query 1, however, return the unique identifiers pi.id of

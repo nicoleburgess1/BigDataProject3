@@ -1,5 +1,4 @@
 import org.apache.spark.sql.SparkSession
-
 import java.io.File
 import java.nio.file.{Files, Paths, StandardCopyOption}
 /*
@@ -53,30 +52,6 @@ object Task2 {
     deleteDirectoryRecursively(new File(tempDir))
 
     spark.stop()
-    import spark.implicits._
-
-  //df.show()
-
-  spark.stop()
 }
-/*val spark = SparkSession.builder()
-  .appName("T1")
-  .config("spark.master", "local")
-  .getOrCreate()
-val df = spark.read.csv("Purchases.csv")
-df.show()
-
-// Register DataFrame as a SQL temporary view
-df.createOrReplaceTempView("people")
-
-// SQL query
-val sqlDF = spark.sql("SELECT name, age FROM people WHERE age > 24")
-sqlDF.show()
-
-// Save result
-sqlDF.write.json("path/to/output/json")
-
-// Stop the Spark session
-spark.stop()*/
 
 }

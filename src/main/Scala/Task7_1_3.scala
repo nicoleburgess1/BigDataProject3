@@ -1,9 +1,6 @@
 import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.classification.LogisticRegression
-import org.apache.spark.ml.evaluation.RegressionEvaluator
 import org.apache.spark.ml.feature.VectorAssembler
-import org.apache.spark.ml.regression.LinearRegression
-import org.apache.spark.ml.feature.{OneHotEncoder, StringIndexer}
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
@@ -40,7 +37,6 @@ object Task7_1_3 {
     //Split into training and test sets
     val Array(trainingData, testData) = preparedData.randomSplit(Array(0.8, 0.2))
 
-    // Train a Linear Regression model (for example: regression algorithm)
     val lr = new LogisticRegression() .setLabelCol("Churn") .setFeaturesCol("features")
     val model = lr.fit(trainingData)
 

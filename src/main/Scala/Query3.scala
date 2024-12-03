@@ -26,7 +26,6 @@ object Query3 {
 
         (id.toInt, x.toInt, y.toInt, name, age.toInt, email, activated)
     }
-    //val words: RDD[String] = lines.flatMap(_.split(" "))
 
     def euclideanDistance(x1: Double, y1: Double, x2: Double, y2: Double): Double = {
       math.sqrt(math.pow(x2 - x1, 2) + math.pow(y2 - y1, 2))

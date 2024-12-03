@@ -6,7 +6,6 @@ Task 2.1) Filter out (drop) the Purchases from P with a total purchase amount ab
 Store the result as T1.
 part-00000-f17e3133-8bd4-45b3-8e3c-5c7343722eb6-c000.csv
  */
-import org.apache.spark.sql.SparkSession
 
 object Task1 {
 

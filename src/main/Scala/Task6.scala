@@ -14,7 +14,7 @@ points)
 object Task6 {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder()
-      .appName("T3")
+      .appName("T6")
       .config("spark.master", "local")
       .getOrCreate()
     val df = spark.read.csv("input/ecommerce_customer_data_large.csv")
